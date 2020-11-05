@@ -152,8 +152,10 @@ See the [Requests package documentation](https://requests.readthedocs.io/en/mast
 
 ## Exceptions
 
- * **requests.exceptions.HTTPError** – An non-successful value is received from the HTTP server.
- * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported that the request was not successful.
+ * **arcgisrest.utils.HTTPError** – A non successful status code was returned. <br>Access the original response via the exception's *response* property and the message via the exception's *message* property.
+
+ * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported an error within its response body.<br>Access the original response via the exception's *response* property and the message via the exception's *message* property.
+
  * **NotImplementedError** – Sending a GeoEvent request via Web Adaptor isn't supported.
 
 ## Sessions

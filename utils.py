@@ -87,8 +87,8 @@ def readEsriJson(response: requests.Response, action: str) -> dict:
 	try:
 		response.raise_for_status()
 	except requests.HTTPError as e:
-		text = 'ArcgisRest encountered an HTTP error while {} at URL "{}" >> {}'
-		raise requests.exceptions.HTTPError(text.format(action, response.url, e))
+		message = 'ArcgisRest encountered an HTTP error while {} at URL "{}" >> {}'.format(action, response.url, e)
+		raise HTTPError(response, message)
 
 	# Read the content
 	try:
@@ -103,17 +103,51 @@ def readEsriJson(response: requests.Response, action: str) -> dict:
 		msg = error['message'] if 'message' in error else 'No Message'
 		dtls = '; '.join(error['details']) if 'details' in error and error['details'] is not None else 'No Details'
 
-		text = 'ArcgisRest encoutered an ArcGIS error while {} at URL "{}" >> {}: {} - {}'
-		raise ArcGISError(text.format(action, response.url, code, msg, dtls))
+		message = 'ArcgisRest encoutered an ArcGIS error while {} at URL "{}" >> {}: {} - {}'.format(action, response.url, code, msg, dtls)
+		raise ArcGISError(response, message)
 
-	if 'success' in data and not data['success']:
-		text = 'ArcgisRest encoutered an unsuccessful response from ArcGIS while {} at URL "{}" >> {}'
-		raise ArcGISError(text.format(action, response.url, response.json()))
+	elif 'success' in data and not data['success']:
+		message = 'ArcgisRest encoutered an unsuccessful response from ArcGIS while {} at URL "{}" >> {}'.format(action, response.url, response.json())
+		raise ArcGISError(response, message)
 
 	return data
 
 
-class ArcGISError(Exception):
+class HTTPError(Exception):
+	"""A non successful status code was returned."""
+
+	def __init__(self, response: requests.Response, message: str):
+		"""A non-successful status code was returned.
+
+		Args:
+			response (requests.Reponse): Response from the request.
+			message (str): Explenation of the error.
+		"""
+		self._response = response
+		self._message = message
+		super().__init__(self.message)
+
+
+	@property
+	def response(self):
+		"""requests.Response: Response from the request from which the error originated."""
+		return self._response
+
+
+	@property
+	def message(self):
+		"""str: Explenation of the error."""
+		return self._message
+
+
+	@message.setter
+	def message(self, value: str):
+		"""str: Explenation of the error."""
+		self._message = value
+
+
+
+class ArcGISError(HTTPError):
 	"""ArcGIS Enterprise reported an error within its response body."""
 
 #endregion
