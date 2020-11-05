@@ -104,8 +104,12 @@ def readEsriJson(response: requests.Response, action: str) -> dict:
 		dtls = '; '.join(error['details']) if 'details' in error and error['details'] is not None else 'No Details'
 
 		text = 'ArcgisRest encoutered an ArcGIS error while {} at URL "{}" >> {}: {} - {}'
-		raise requests.exceptions.HTTPError(text.format(action, response.url, code, msg, dtls))
+		raise ArcGISError(text.format(action, response.url, code, msg, dtls))
 
 	return data
+
+
+class ArcGISError(Exception):
+	"""ArcGIS Enterprise reported an error within its response body."""
 
 #endregion

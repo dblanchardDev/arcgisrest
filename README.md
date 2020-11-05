@@ -11,7 +11,7 @@ Underneath the hood, this module makes use of the [Requests package](https://req
 &nbsp;
 # Getting Started
 
-This helper was written with Python 3.8, but should work with most if not all 3.x versions of Python.
+This helper was written with Python 3.8 but should work with most if not all 3.x versions of Python.
 
 You will first need to install the [Requests package](https://requests.readthedocs.io/en/master/user/install/#install) in your Python environment. You will then need to drop the *arcgis* folder in your project.
 
@@ -44,7 +44,7 @@ Each instance of the *ArcgisRest* class is used to send requests to all software
 
 **`ArcgisRest`**`(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True)`
 
-The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies), or connecting directly to the server.
+The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies) or connecting directly to the server.
 
 However, both scenarios share the following parameters:
 
@@ -52,25 +52,25 @@ However, both scenarios share the following parameters:
 
  * **username** (optional) – The username to use for authentication. Will use an anonymous connection if not specified.
 
- * **password** (optional) – The password for the provided username. Will use an anomymous connection if not specified.
+ * **password** (optional) – The password for the provided username. Will use an anonymous connection if not specified.
 
  * **verify_ssl** (optional) – Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections. Defaults to True.
 
 &nbsp;
 ## Connections via Web Adaptors (or Reverse Proxies)
-A connection via Web Adaptors (or Reverse Proxies) is one where the connection to all ArcGIS Enteprise components is established through the same common web server.
+A connection via Web Adaptors (or Reverse Proxies) is one where the connection to all ArcGIS Enterprise components is established through the same common web server.
 
 📝 *If you are using ports other than 80/443, include the port in the **server** parameter (e.g. `https://example.com:3001`).*
 
 📝 *Connection to the GeoEvent endpoints are not supported in this mode.*
 
- * **web_adaptors** (optional) – A dictionnary of the Web Adaptor (or reverse proxy) directory names in the format `{'portal': str, 'arcgis': str}`. Only specify the directories that are installed. If not specified, a direct connection will be used.
+ * **web_adaptors** (optional) – A dictionary of the Web Adaptor (or reverse proxy) directory names in the format `{'portal': str, 'arcgis': str}`. Only specify the directories that are installed. If not specified, a direct connection will be used.
 
 &nbsp;
 ## Direct Connections
 A direct connection is one that connects directly to the server hosting the ArcGIS Enterprise software. In this mode, the appropriate port and directory will automatically be derived.
 
- * **public_host** (optional) – The public host used by the servers (e.g. `example.com`). This is normally the host/domain via which the main Web Adaptors (or reverse proxies) are accesible and the same as the value used for the *WebContextURL* properties.
+ * **public_host** (optional) – The public host used by the servers (e.g. `example.com`). This is normally the host/domain via which the main Web Adaptors (or reverse proxies) are accessible and the same as the value used for the *WebContextURL* properties.
 
 
 &nbsp;
@@ -106,9 +106,9 @@ If multiple components of ArcGIS Enterprise are installed on the same server, yo
 &nbsp;
 # Connection Handler
 
-Used to send requests to the corresponding software component on the server. URL derivation and the authentication is automatically handled.
+Used to send requests to the corresponding software component on the server. URL derivation and authentication are automatically handled.
 
-This class is not created directy but instead accessed via the `.portal`, `.arcgis`, and `.geoevent` properties of the *ArcgisRest* class.
+This class is not created directly but instead accessed via the `.portal`, `.arcgis`, and `.geoevent` properties of the *ArcgisRest* class.
 
  * `connection.`**`get`**`(path: str, params: dict = None, admin: bool = False) -> requests.Response` – Send a GET request to the corresponding server component.
 
@@ -153,11 +153,11 @@ See the [Requests package documentation](https://requests.readthedocs.io/en/mast
 ## Exceptions
 
  * **requests.exceptions.HTTPError** – An non-successful value is received from the HTTP server.
- * **arcgisrest.utils.ArcGISError** – ArcGIS Enteprise reported that the request was not successful.
+ * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported that the request was not successful.
  * **NotImplementedError** – Sending a GeoEvent request via Web Adaptor isn't supported.
 
 ## Sessions
-A session allow for connection-pooling, which improves performance when making several consecutive requests to the same host.
+A session allows for connection-pooling, which improves performance when making several consecutive requests to the same host.
 
 Sessions are started using context managers on the Connection Manager:
 ```python
@@ -184,15 +184,15 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-`arcgisrest.utils.`**`deriveRefererUrl`**`(url: str) -> str` – Derive the referer URL for tokens.
+`arcgisrest.utils.`**`deriveRefererUrl`**`(url: str) -> str` – Derive the referrer URL for tokens.
 
  * Parameters:
-   * **url** – The full URL from which to derive the referer URL.
+   * **url** – The full URL from which to derive the referrer URL.
 
  * Exception:
    * **ValueError** – URL is missing the scheme, or domain.
 
- * Returns: The referer URL to use for tokens.
+ * Returns: The referrer URL to use for tokens.
 
 &nbsp;
 
@@ -204,7 +204,7 @@ A few utilities are available from the *utils* sub-package.
 
  * Exception:
    * **requests.exceptions.HTTPError** – An non-successful value is received from the HTTP server.
-   * **arcgisrest.utils.ArcGISError** – ArcGIS Enteprise reported that the request was not successful.
+   * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported that the request was not successful.
 
  * Returns: The JSON dictionary from the response.
 
