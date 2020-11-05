@@ -9,9 +9,8 @@
 
 import requests
 
-from .token import getToken
+from .tokens import getToken
 from .utils import readEsriJson
-
 
 #region CONSTANTS —————————————————————————————————————————————————————————————————————————————————
 

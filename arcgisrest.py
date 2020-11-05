@@ -9,7 +9,6 @@
    Released under the MIT license. See LICENSE file for details"""
 
 
-from typing import TypedDict
 from urllib.parse import urlsplit
 
 import urllib3
@@ -17,13 +16,6 @@ import urllib3
 from .connection import Connection
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-
-class WebAdaptors(TypedDict):
-	"""Definition of Web Adaptor dictionnary."""
-	portal: str
-	arcgis: str
-	geoevent: str
 
 
 class ArcgisRest():
@@ -51,14 +43,14 @@ class ArcgisRest():
 
 
 	# Intialization
-	def __init__(self, server: str, username: str = None, password: str = None, web_adaptors: WebAdaptors = None, public_host: str = None, verify_ssl: bool = True):
+	def __init__(self, server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True):
 		"""Handle connections and requests to various ArcGIS Enterprise endpoints.
 
 		Args:
 			server (str): The URL to the server, excluding the directories (e.g. https://example.com).
 			username (str, optional): The username to use for authentication. Defaults to None.
 			password (str, optional): The password for the provided username. Defaults to None.
-			web_adaptors (WebAdaptors, optional): The web adaptor/proxy directory names in a dictionnary {'portal': str, 'arcgis': str}. If not specified, uses a direct connection with the default port and endpoint.
+			web_adaptors (dict, optional): The web adaptor/proxy directory names in a dictionnary {'portal': str, 'arcgis': str}. If not specified, uses a direct connection with the default port and endpoint.
 			public_host (str, optional): The public host used by the servers (e.g. `example.com`). This is normally the host/domain via which the main Web Adaptors (or reverse proxies) are accesible and the same as the value used for the *WebContextURL* properties. Used for direct connections. Default to None.
 			verify_ssl (bool, optional): Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections. Defaults to True.
 		"""
@@ -123,7 +115,7 @@ class ArcgisRest():
 
 
 	@property
-	def web_adaptors(self) -> WebAdaptors:
+	def web_adaptors(self) -> dict:
 		"""WedAdaptors dict: The name of the web adaptors used on this server."""
 		return self._web_adaptors.copy()
 

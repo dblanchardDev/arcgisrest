@@ -207,3 +207,23 @@ A few utilities are available from the *utils* sub-package.
    * **arcgisrest.utils.ArcGISError** – ArcGIS Enteprise reported that the request was not successful.
 
  * Returns: The JSON dictionary from the response.
+
+---
+
+## Issues
+Found a bug? Please let me know by submitting an issue.
+
+## Contributing
+Contributions are welcomed on this open source project. Please see our [guidelines in the repository](https://github.com/dblanchardDev/arcgisrest/blob/master/Contributing.md) before contributing.
+
+## Licensing
+Copyright 2017 David Blanchard – All Rights Reserved
+
+Licensed under the MIT License (the "License"); you may not use these files except in compliance with the License. You may obtain a copy of the License at:
+
+https://github.com/dblanchardDev/arcgisrest/blob/main/LICENSE
+
+Unless required by applicable law or agreed to in writing, software and code distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+## Support
+This tool is distributed "AS IS" and is not supported nor certified by Esri Inc. or any of its international distributors.
