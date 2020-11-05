@@ -48,7 +48,7 @@ The choice of parameters used at initialization varies depending on whether you 
 
 However, both scenarios share the following parameters:
 
- * **server** – The URL to the server, excluding the directories (e.g. `https://example.com`).
+ * **server** – The URL to the server (e.g. `https://example.com`). If passing a URL with directories, they will automatically be stripped out.
 
  * **username** (optional) – The username to use for authentication. Will use an anonymous connection if not specified.
 
