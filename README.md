@@ -42,7 +42,7 @@ wa_resp = arcgisrest.portal.get('system/webadaptors', admin=True)
 Each instance of the *ArcgisRest* class is used to send requests to all software components (Portal, ArcGIS Server, and GeoEvent) on the same server. If the components are on multiple servers, multiple instances of the *ArcgisRest* class will be required.
 
 
-`arcgisrest.`**`ArcgisRest`**`(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True)`
+**`ArcgisRest`**`(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True)`
 
 The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies), or connecting directly to the server.
 
@@ -82,25 +82,25 @@ If multiple components of ArcGIS Enterprise are installed on the same server, yo
 
 📝 *No actual connection is made to the server until the first request is sent.*
 
- * `arcgisrest.`**`portal`**`:Connection` – The ArcGIS Portal connection handler. Use this sub-class to send requests to Portal.
+ * `ArcgisRest.`**`portal`**`:Connection` – The ArcGIS Portal connection handler. Use this sub-class to send requests to Portal.
 
- * `arcgisrest.`**`arcgis`**`:Connection` – The ArcGIS Server connection handler. Use this sub-class to send requests to ArcGIS Server.
+ * `ArcgisRest.`**`arcgis`**`:Connection` – The ArcGIS Server connection handler. Use this sub-class to send requests to ArcGIS Server.
 
- * `arcgisrest.`**`geoevent`**`:Connection` – The GeoEvent Server connection handler. Use this sub-class to send requests to GeoEvent Server.
+ * `ArcgisRest.`**`geoevent`**`:Connection` – The GeoEvent Server connection handler. Use this sub-class to send requests to GeoEvent Server.
 
- * `arcgisrest.`**`server`**`:str` (readonly) – The URL to the server, excluding the directories.
+ * `ArcgisRest.`**`server`**`:str` (readonly) – The URL to the server, excluding the directories.
 
- * `arcgisrest.`**`username`**`:str` (readonly) – The username to use for authentication.
+ * `ArcgisRest.`**`username`**`:str` (readonly) – The username to use for authentication.
 
- * `arcgisrest.`**`password`**`:str` (readonly) – The password for the associated username.
+ * `ArcgisRest.`**`password`**`:str` (readonly) – The password for the associated username.
 
- * `arcgisrest.`**`use_https`**`:bool` (readonly) – Whether to use a secure HTTPS connection as determined from the initial server URL.
+ * `ArcgisRest.`**`use_https`**`:bool` (readonly) – Whether to use a secure HTTPS connection as determined from the initial server URL.
 
- * `arcgisrest.`**`verify_ssl`**`:bool` (readonly) – Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections.
+ * `ArcgisRest.`**`verify_ssl`**`:bool` (readonly) – Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections.
 
- * `arcgisrest.`**`public_host`**`:str` (readonly) – The public host for the server to be used for authentication.
+ * `ArcgisRest.`**`public_host`**`:str` (readonly) – The public host for the server to be used for authentication.
 
- * `arcgisrest.`**`web_adaptors`**`:dict` (readonly) – The name of the web adaptors used on this server.
+ * `ArcgisRest.`**`web_adaptors`**`:dict` (readonly) – The name of the web adaptors used on this server.
 
 
 &nbsp;
@@ -139,13 +139,13 @@ This class is not created directy but instead accessed via the `.portal`, `.arcg
 ## Response
 All requests return an instance of the *requests.Response* class from the Requests package. The following are commonly used properties and methods of this class:
 
- * `response.`**`ok`**`:bool` – Whether the request was successful.
+ * `requests.response.`**`ok`**`:bool` – Whether the request was successful.
 
- * `response.`**`status_code`**`:int` – The HTTP response code.
+ * `requests.response.`**`status_code`**`:int` – The HTTP response code.
 
- * `response.`**`reasons`**`:str` – The text reason behind the status code.
+ * `requests.response.`**`reasons`**`:str` – The text reason behind the status code.
 
- * `response.`**`json`**`() -> any` – Returns the JSON-encoded body of the response if any.
+ * `requests.response.`**`json`**`() -> any` – Returns the JSON-encoded body of the response if any.
 
 See the [Requests package documentation](https://requests.readthedocs.io/en/master/user/quickstart/#response-content) for details.
 
