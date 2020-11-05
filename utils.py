@@ -106,6 +106,10 @@ def readEsriJson(response: requests.Response, action: str) -> dict:
 		text = 'ArcgisRest encoutered an ArcGIS error while {} at URL "{}" >> {}: {} - {}'
 		raise ArcGISError(text.format(action, response.url, code, msg, dtls))
 
+	if 'success' in data and not data['success']:
+		text = 'ArcgisRest encoutered an unsuccessful response from ArcGIS while {} at URL "{}" >> {}'
+		raise ArcGISError(text.format(action, response.url, response.json()))
+
 	return data
 
 
