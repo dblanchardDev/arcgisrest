@@ -152,9 +152,13 @@ See the [Requests package documentation](https://requests.readthedocs.io/en/mast
 
 ## Exceptions
 
- * **arcgisrest.utils.HTTPError** – A non successful status code was returned. <br>Access the original response via the exception's *response* property and the message via the exception's *message* property.
+ * **arcgisrest.utils.ArcgisRestException** – Not raised directly, serves as the parent for the *HTTPError* and the *ArcGISError* exceptions. Beyond those provided by the core Python exception, provides:
+    * _**message**_ – Explanation of the error.
+    * _**response**_ – A copy of the original *requests.Response* object from which the exception originated.
 
- * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported an error within its response body.<br>Access the original response via the exception's *response* property and the message via the exception's *message* property.
+ * **arcgisrest.utils.HTTPError** – A non successful status code was returned. Inherits from *ArcgisRestException*.
+
+ * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported an error within its response body. Inherits from *ArcgisRestException*.
 
  * **NotImplementedError** – Sending a GeoEvent request via Web Adaptor isn't supported.
 

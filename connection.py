@@ -144,10 +144,7 @@ class Connection():
 
 		response = req.request(method, url, params=params, data=data, json=json, files=files, headers=headers, timeout=4, verify=self.arcgisrest.verify_ssl)
 
-		if method not in ['HEAD', 'OPTIONS']:
-			readEsriJson(response, 'executing a {} request'.format(method.lower()))
-		else:
-			response.raise_for_status()
+		readEsriJson(response, 'executing a {} request'.format(method.lower()))
 
 		return response
 

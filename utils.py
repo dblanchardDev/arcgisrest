@@ -82,6 +82,7 @@ def readEsriJson(response: requests.Response, action: str) -> dict:
 	Returns:
 		dict: The JSON dictionary from the response.
 	"""
+	data = None
 
 	# Check for standard HTTP errors
 	try:
@@ -93,31 +94,35 @@ def readEsriJson(response: requests.Response, action: str) -> dict:
 	# Read the content
 	try:
 		data = response.json()
+
+		# Check for Esri errors
+		if 'error' in data:
+			error = data['error']
+			code = error['code'] if 'code' in error else 'X'
+			msg = error['message'] if 'message' in error else 'No Message'
+			dtls = '; '.join(error['details']) if 'details' in error and error['details'] is not None else 'No Details'
+
+			message = 'ArcgisRest encoutered an ArcGIS error while {} at URL "{}" >> {}: {} - {}'.format(action, response.url, code, msg, dtls)
+			raise ArcGISError(response, message)
+
+		if 'success' in data and not data['success']:
+			message = 'ArcgisRest encoutered an unsuccessful response from ArcGIS while {} at URL "{}" >> {}'.format(action, response.url, response.json())
+			raise ArcGISError(response, message)
+
 	except json.decoder.JSONDecodeError:
 		raise requests.exceptions.RequestException('Unable to read the JSON for {}'.format(response.url))
 
-	# Check for Esri errors
-	if 'error' in data:
-		error = data['error']
-		code = error['code'] if 'code' in error else 'X'
-		msg = error['message'] if 'message' in error else 'No Message'
-		dtls = '; '.join(error['details']) if 'details' in error and error['details'] is not None else 'No Details'
-
-		message = 'ArcgisRest encoutered an ArcGIS error while {} at URL "{}" >> {}: {} - {}'.format(action, response.url, code, msg, dtls)
-		raise ArcGISError(response, message)
-
-	elif 'success' in data and not data['success']:
-		message = 'ArcgisRest encoutered an unsuccessful response from ArcGIS while {} at URL "{}" >> {}'.format(action, response.url, response.json())
-		raise ArcGISError(response, message)
+	except ValueError:
+		pass # Response didn't contain JSON
 
 	return data
 
 
-class HTTPError(Exception):
-	"""A non successful status code was returned."""
+class ArcgisRestException(Exception):
+	"""An ArcgisRest request returned an error."""
 
 	def __init__(self, response: requests.Response, message: str):
-		"""A non-successful status code was returned.
+		"""An ArcgisRest request returned an error.
 
 		Args:
 			response (requests.Reponse): Response from the request.
@@ -146,8 +151,11 @@ class HTTPError(Exception):
 		self._message = value
 
 
+class HTTPError(ArcgisRestException):
+	"""A non successful status code was returned."""
 
-class ArcGISError(HTTPError):
+
+class ArcGISError(ArcgisRestException):
 	"""ArcGIS Enterprise reported an error within its response body."""
 
 #endregion
