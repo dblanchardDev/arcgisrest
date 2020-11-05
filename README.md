@@ -122,6 +122,10 @@ This class is not created directly but instead accessed via the `.portal`, `.arc
 
  * `connection.`**`head`**`(path: str, admin: bool = False) -> requests.Response` – Send a HEAD request to the corresponding server component.
 
+ * `connection.`**`arcgisrest`**`:ArcgisRest` (readonly) – A pointer back to the source ArcgisRest instance.
+
+ * `connection.`**`endpoint_type`**`:str` (readonly) – The endpoint type for this connection handler: 'portal', 'arcgis', 'geoevent'.
+
 ## Parameters
 
  * **path** – Path to which to send the request, relative to the endpoints root directory (e.g. what comes after `https://example.com/arcgis/rest`).
