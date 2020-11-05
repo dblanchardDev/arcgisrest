@@ -1,4 +1,4 @@
-# Contributing to Clone Dataset ArcGIS Tool
+# Contributing to ArcgisRest
 
 Contributions are welcomed to this project.
 
