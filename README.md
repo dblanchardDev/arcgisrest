@@ -18,22 +18,22 @@ You will first need to install the [Requests package](https://requests.readthedo
 Next, import the module and make your first request as follows:
 
 ```python
-from arcgisrest import ArcgisRest
+import arcgisrest
 
 # Establish the instance of ArcgisRest for the server
-arcgisrest = ArcgisRest('https://myserver.com', 'user_name', 'P@ssw0rd')
+server = arcgisrest.ArcgisRest('https://myserver.com', 'user_name', 'P@ssw0rd')
 
 # Get the listing of the Utilities directory
-utilities_resp = arcgisrest.arcgis.get('Utilties')
+utilities_resp = server.arcgis.get('Utilties')
 
 # Update a user's email address in Portal
-update_results = arcgisrest.portal.post('community/users/a_username/update', data={
+update_results = server.portal.post('community/users/a_username/update', data={
 	'email': 'a_username@example.com',
 	'clearEmptyFields': False,
 })
 
 # Get a listing of Portal's Web Adaptors (from admin endpoint)
-wa_resp = arcgisrest.portal.get('system/webadaptors', admin=True)
+wa_resp = server.portal.get('system/webadaptors', admin=True)
 ```
 
 &nbsp;
@@ -42,7 +42,7 @@ wa_resp = arcgisrest.portal.get('system/webadaptors', admin=True)
 Each instance of the *ArcgisRest* class is used to send requests to all software components (Portal, ArcGIS Server, and GeoEvent) on the same server. If the components are on multiple servers, multiple instances of the *ArcgisRest* class will be required.
 
 
-**`ArcgisRest`**`(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True)`
+<code>arcgisrest.<b>ArcgisRest</b>(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True)</code>
 
 The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies) or connecting directly to the server.
 
@@ -66,11 +66,23 @@ A connection via Web Adaptors (or Reverse Proxies) is one where the connection t
 
  * **web_adaptors** (optional) – A dictionary of the Web Adaptor (or reverse proxy) directory names in the format `{'portal': str, 'arcgis': str}`. Only specify the directories that are installed. If not specified, a direct connection will be used.
 
+```python
+import arcgisrest
+
+server = arcgisrest.ArcgisRest('https://example.com', 'user_name', 'P@ssw0rd', web_adaptors={'portal': 'portal', 'arcgis': 'arcgis'})
+```
+
 &nbsp;
 ## Direct Connections
 A direct connection is one that connects directly to the server hosting the ArcGIS Enterprise software. In this mode, the appropriate port and directory will automatically be derived.
 
  * **public_host** (optional) – The public host used by the servers (e.g. `example.com`). This is normally the host/domain via which the main Web Adaptors (or reverse proxies) are accessible and the same as the value used for the *WebContextURL* properties.
+
+```python
+import arcgisrest
+
+server = arcgisrest.ArcgisRest('https://server.domain', 'user_name', 'P@ssw0rd', public_host='example.com', verify_ssl=False)
+```
 
 
 &nbsp;
@@ -82,25 +94,25 @@ If multiple components of ArcGIS Enterprise are installed on the same server, yo
 
 📝 *No actual connection is made to the server until the first request is sent.*
 
- * `ArcgisRest.`**`portal`**`:Connection` – The ArcGIS Portal connection handler. Use this sub-class to send requests to Portal.
+ * <code>ArcgisRest.<b>portal</b>:Connection</code> – The ArcGIS Portal connection handler. Use this sub-class to send requests to Portal.
 
- * `ArcgisRest.`**`arcgis`**`:Connection` – The ArcGIS Server connection handler. Use this sub-class to send requests to ArcGIS Server.
+ * <code>ArcgisRest.<b>arcgis</b>:Connection</code> – The ArcGIS Server connection handler. Use this sub-class to send requests to ArcGIS Server.
 
- * `ArcgisRest.`**`geoevent`**`:Connection` – The GeoEvent Server connection handler. Use this sub-class to send requests to GeoEvent Server.
+ * <code>ArcgisRest.<b>geoevent</b>:Connection</code> – The GeoEvent Server connection handler. Use this sub-class to send requests to GeoEvent Server.
 
- * `ArcgisRest.`**`server`**`:str` (readonly) – The URL to the server, excluding the directories.
+ * <code>ArcgisRest.<b>server</b>:str</code> (readonly) – The URL to the server, excluding the directories.
 
- * `ArcgisRest.`**`username`**`:str` (readonly) – The username to use for authentication.
+ * <code>ArcgisRest.<b>username</b>:str</code> (readonly) – The username to use for authentication.
 
- * `ArcgisRest.`**`password`**`:str` (readonly) – The password for the associated username.
+ * <code>ArcgisRest.<b>password</b>:str</code> (readonly) – The password for the associated username.
 
- * `ArcgisRest.`**`use_https`**`:bool` (readonly) – Whether to use a secure HTTPS connection as determined from the initial server URL.
+ * <code>ArcgisRest.<b>use_https</b>:bool</code> (readonly) – Whether to use a secure HTTPS connection as determined from the initial server URL.
 
- * `ArcgisRest.`**`verify_ssl`**`:bool` (readonly) – Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections.
+ * <code>ArcgisRest.<b>verify_ssl</b>:bool</code> (readonly) – Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections.
 
- * `ArcgisRest.`**`public_host`**`:str` (readonly) – The public host for the server to be used for authentication.
+ * <code>ArcgisRest.<b>public_host</b>:str</code> (readonly) – The public host for the server to be used for authentication.
 
- * `ArcgisRest.`**`web_adaptors`**`:dict` (readonly) – The name of the web adaptors used on this server.
+ * <code>ArcgisRest.<b>web_adaptors</b>:dict</code> (readonly) – The name of the web adaptors used on this server.
 
 
 &nbsp;
@@ -110,21 +122,21 @@ Used to send requests to the corresponding software component on the server. URL
 
 This class is not created directly but instead accessed via the `.portal`, `.arcgis`, and `.geoevent` properties of the *ArcgisRest* class.
 
- * `connection.`**`get`**`(path: str, params: dict = None, admin: bool = False) -> requests.Response` – Send a GET request to the corresponding server component.
+ * <code>Connection.<b>get</b>(path: str, params: dict = None, admin: bool = False) -> requests.Response</code> – Send a GET request to the corresponding server component.
 
- * `connection.`**`post`**`(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response` – Send a POST request to the corresponding server component.
+ * <code>Connection.<b>post</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a POST request to the corresponding server component.
 
- * `connection.`**`put`**`(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response` – Send a PUT request to the corresponding server component.
+ * <code>Connection.<b>put</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a PUT request to the corresponding server component.
 
- * `connection.`**`patch`**`(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response` – Send a PATCH request to the corresponding server component.
+ * <code>Connection.<b>patch</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a PATCH request to the corresponding server component.
 
- * `connection.`**`delete`**`(path: str, admin: bool = False) -> requests.Response` – Send a DELETE request to the corresponding server component.
+ * <code>Connection.<b>delete</b>(path: str, admin: bool = False) -> requests.Response</code> – Send a DELETE request to the corresponding server component.
 
- * `connection.`**`head`**`(path: str, admin: bool = False) -> requests.Response` – Send a HEAD request to the corresponding server component.
+ * <code>Connection.<b>head</b>(path: str, admin: bool = False) -> requests.Response</code> – Send a HEAD request to the corresponding server component.
 
- * `connection.`**`arcgisrest`**`:ArcgisRest` (readonly) – A pointer back to the source ArcgisRest instance.
+ * <code>Connection.<b>arcgisrest</b>:ArcgisRest</code> (readonly) – A pointer back to the source ArcgisRest instance.
 
- * `connection.`**`endpoint_type`**`:str` (readonly) – The endpoint type for this connection handler: 'portal', 'arcgis', 'geoevent'.
+ * <code>Connection.<b>endpoint_type</b>:str</code> (readonly) – The endpoint type for this connection handler: 'portal', 'arcgis', 'geoevent'.
 
 ## Parameters
 
@@ -143,13 +155,13 @@ This class is not created directly but instead accessed via the `.portal`, `.arc
 ## Response
 All requests return an instance of the *requests.Response* class from the Requests package. The following are commonly used properties and methods of this class:
 
- * `requests.response.`**`ok`**`:bool` – Whether the request was successful.
+ * <code>requests.response.<b>ok</b>:bool</code> – Whether the request was successful.
 
- * `requests.response.`**`status_code`**`:int` – The HTTP response code.
+ * <code>requests.response.<b>status_code</b>:int</code> – The HTTP response code.
 
- * `requests.response.`**`reasons`**`:str` – The text reason behind the status code.
+ * <code>requests.response.<b>reasons</b>:str</code> – The text reason behind the status code.
 
- * `requests.response.`**`json`**`() -> any` – Returns the JSON-encoded body of the response if any.
+ * <code>requests.response.<b>json</b>() -> any</code> – Returns the JSON-encoded body of the response if any.
 
 See the [Requests package documentation](https://requests.readthedocs.io/en/master/user/quickstart/#response-content) for details.
 
@@ -171,7 +183,10 @@ A session allows for connection-pooling, which improves performance when making 
 
 Sessions are started using context managers on the Connection Manager:
 ```python
-with arcgisrest.portal as portal:
+import arcgisrest
+server = arcgisrest.ArcgisRest('https://example', 'user_name', 'P@ssw0rd', web_adaptors={'portal': 'portal'})
+
+with server.portal as portal:
 	com_resp = portal.get('community')
 	self_resp = portal.get('portals/self')
 ```
@@ -182,7 +197,7 @@ A few utilities are available from the *utils* sub-package.
 
 📝 *You do not normally need to access these methods as URL derivation, referrers, and request parsing is handled by default by the request methods.*
 
-`arcgisrest.utils.`**`deriveBaseUrl`**`(url: str) -> str` – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
+<code>arcgisrest.utils.<b>deriveBaseUrl</b>(url: str) -> str</code> – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
 
  * Parameters:
    * **url** – The full URL from which to derive the base URL.
@@ -194,7 +209,7 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-`arcgisrest.utils.`**`deriveRefererUrl`**`(url: str) -> str` – Derive the referrer URL for tokens.
+<code>arcgisrest.utils.<b>deriveRefererUrl</b>(url: str) -> str</code> – Derive the referrer URL for tokens.
 
  * Parameters:
    * **url** – The full URL from which to derive the referrer URL.
@@ -206,7 +221,7 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-`arcgisrest.utils.`**`readEsriJson`**`(response: requests.Response, action: str) -> dict` – Read the JSON from a request to an Esri server, raising an error for HTTP errors and ArcGIS errors.
+<code>arcgisrest.utils.<b>readEsriJson</b>(response: requests.Response, action: str) -> dict</code> – Read the JSON from a request to an Esri server, raising an error for HTTP errors and ArcGIS errors.
 
  * Parameters:
    * **response** – The response object to parse.
