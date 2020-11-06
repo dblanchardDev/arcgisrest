@@ -28,8 +28,9 @@ class ArcgisRest():
 	_use_https: bool = True
 	_verify_ssl: bool = True
 	_public_host: str = None
+	_web_adaptors: str = None
 
-	_web_adaptors: dict = {
+	_WEB_ADAPTORS_TEMPLATE: dict = {
 		'portal': None,
 		'arcgis': None,
 		'geoevent': None,
@@ -65,6 +66,7 @@ class ArcgisRest():
 		self._verify_ssl = verify_ssl
 		self._public_host = public_host
 
+		self._web_adaptors = self._WEB_ADAPTORS_TEMPLATE.copy()
 		if web_adaptors is not None:
 			self._web_adaptors['portal'] = web_adaptors.get('portal')
 			self._web_adaptors['arcgis'] = web_adaptors.get('arcgis')
