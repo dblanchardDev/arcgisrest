@@ -10,9 +10,18 @@
    Released under the MIT license. See LICENSE file for details"""
 
 import json
+import logging
 from urllib.parse import urlsplit, urlunsplit
 
 import requests
+
+
+def logDebug():
+	"""Activate output of debug messages to logging."""
+	logging.getLogger("requests").setLevel(logging.DEBUG)
+	logging.getLogger("urllib3").setLevel(logging.DEBUG)
+
+	return
 
 
 #region URL HELPERS ———————————————————————————————————————————————————————————————————————————————

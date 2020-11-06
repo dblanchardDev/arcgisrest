@@ -10,14 +10,17 @@
    Copyright 2020 Esri Canada - All Rights Reserved
    Released under the MIT license. See LICENSE file for details"""
 
-
+import logging
 from urllib.parse import urlsplit
 
 import urllib3
 
 from .connection import Connection
 
+# Disable warning and debug messages from libraries
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 class ArcgisRest():

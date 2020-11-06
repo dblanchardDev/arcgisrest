@@ -233,6 +233,10 @@ A few utilities are available from the *utils* sub-package.
 
  * Returns: The JSON dictionary from the response.
 
+&nbsp;
+
+<code>arcgisrest.utils.<b>logDebug</b>()</code> – Activate output of debug messages to logging for the requests and urllib3 packages.
+
 ---
 
 ## Issues
