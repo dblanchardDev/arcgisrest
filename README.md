@@ -192,10 +192,52 @@ with server.portal as portal:
 ```
 
 &nbsp;
+# Tokens
+A few methods related to tokens are exposed for convenience.
+
+📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
+
+<code>arcgisrest.tokens.<b>getServerInfo</b>(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
+
+ * Parameters:
+   * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis'].
+
+   * **url** – The full URL for which the info is required.
+
+   * **public_host** – Same as ArcgisRest for details.
+
+   * **verify_ssl** – Same as ArcgisRest for details.
+
+ * Returns:
+
+   * The /rest/info data from the server as a JSON dictionnary.
+
+
+<code>arcgisrest.tokens.<b>getToken</b>(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
+
+ * Parameters:
+   * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis', 'geoevent'].
+
+   * **url** – The full URL for which a token is required.
+
+   * **username** – The username with which to authenticate.
+
+   * **password** – The password corresponding to the provided username.
+
+   * **public_host** – The public host or domain of the server if it differs from the url. Defaults to None.
+
+   * **verify_ssl** – Whether to verify the SSL certificate. Defaults to True.
+
+ * Raises:
+   * **NotImplementedError** – Authentications other than token based are not implemented.
+
+ * Returns: The token data dictionary {token: str, expires: int, ssl: bool}.
+
+&nbsp;
 # Utilities
 A few utilities are available from the *utils* sub-package.
 
-📝 *You do not normally need to access these methods as URL derivation, referrers, and request parsing is handled by default by the request methods.*
+📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
 
 <code>arcgisrest.utils.<b>deriveBaseUrl</b>(url: str) -> str</code> – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
 

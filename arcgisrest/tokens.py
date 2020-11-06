@@ -21,7 +21,7 @@ from .utils import deriveBaseUrl, deriveRefererUrl, readEsriJson
 _stored_tokens = {}
 
 
-def getStoredToken(url: str) -> dict:
+def _getStoredToken(url: str) -> dict:
 	"""Get an non-expired token that has been stored for re-use (if available).
 
 	Args:
@@ -42,7 +42,7 @@ def getStoredToken(url: str) -> dict:
 	return None
 
 
-def setStoredToken(url: str, token_data: dict):
+def _setStoredToken(url: str, token_data: dict):
 	"""Store or update a token for re-use.
 
 	Args:
@@ -64,7 +64,7 @@ def getServerInfo(endpoint_type: str, url: str, public_host: str = None, verify_
 	"""Retrieve ArcGIS Enterprise's rest information.
 
 	Args:
-		endpoint_type (str): The endpoint type as chosen from ['portal', 'arcgis', 'geoevent'].
+		endpoint_type (str): The endpoint type as chosen from ['portal', 'arcgis'].
 		url (str): The URL for which the info is required.
 		public_host (str, optional): The public host or domain of the server if it differs from the url. Defaults to None.
 		verify_ssl (bool, optional): Whether to verify the SSL Certificate. Defaults to True.
@@ -72,8 +72,8 @@ def getServerInfo(endpoint_type: str, url: str, public_host: str = None, verify_
 	Returns:
 		dict: The /rest/info data from the server as a JSON dictionnary.
 	"""
-	if endpoint_type not in ['portal', 'arcgis', 'geoevent']:
-		raise ValueError('Endpoint type must be one of ["portal", "arcgis", "geoevent"].')
+	if endpoint_type not in ['portal', 'arcgis']:
+		raise ValueError('Endpoint type must be one of ["portal", "arcgis"].')
 
 	# Derive the info URL
 	server_base = deriveBaseUrl(url)
@@ -175,7 +175,7 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 	# Portal & ArcGIS follow a standard flow for tokens
 	if endpoint_type in ['portal', 'arcgis']:
 
-		token_data = getStoredToken(url)
+		token_data = _getStoredToken(url)
 		if token_data is None:
 
 			# Get the server information & validate it's data
@@ -190,16 +190,16 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 				raise Exception('The server rest info retrieved for {} does not contain a token service URL. Unable to authenticate. Try specifying a public host.'.format(url))
 
 			# Get the token
-			token_data = getStoredToken(token_url)
+			token_data = _getStoredToken(token_url)
 
 			if token_data is None:
 				token_data = _generateToken(token_url, username, password, deriveRefererUrl(url), verify_ssl)
-				setStoredToken(token_url, token_data)
+				_setStoredToken(token_url, token_data)
 
 			# If federated server, swap Portal token for server token
 			if endpoint_type == 'arcgis' and 'owningSystemUrl' in info:
 				token_data = _swapPortalForServerToken(token_url, url, token_data['token'], verify_ssl)
-				setStoredToken(url, token_data)
+				_setStoredToken(url, token_data)
 
 	# GeoEvent requires that we go up to it's associated ArcGIS Server instance
 	elif endpoint_type == 'geoevent':
@@ -211,7 +211,7 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 
 		# Get token for ArcGIS Server
 		token_data = getToken('arcgis', arcgis_url, username, password, public_host, verify_ssl)
-		setStoredToken(url, token_data)
+		_setStoredToken(url, token_data)
 
 	# Un-recognized endpoint
 	else:
