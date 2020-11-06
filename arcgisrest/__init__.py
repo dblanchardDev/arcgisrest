@@ -3,6 +3,8 @@
    Date: October 2020
    Python: 3.8
 
+   https://github.com/dblanchardDev/arcgisrest
+
    Copyright 2020 Esri Canada - All Rights Reserved
    Released under the MIT license. See LICENSE file for details"""
 
