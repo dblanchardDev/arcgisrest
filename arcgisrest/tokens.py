@@ -10,6 +10,7 @@
    Released under the MIT license. See LICENSE file for details"""
 
 from datetime import datetime
+from typing import Union
 from urllib.parse import urlsplit
 
 import requests
@@ -60,7 +61,7 @@ def _setStoredToken(url: str, token_data: dict):
 
 #region TOKEN ACQUISITION —————————————————————————————————————————————————————————————————————————
 
-def getServerInfo(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True) -> dict:
+def getServerInfo(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict:
 	"""Retrieve ArcGIS Enterprise's rest information.
 
 	Args:
@@ -68,6 +69,7 @@ def getServerInfo(endpoint_type: str, url: str, public_host: str = None, verify_
 		url (str): The URL for which the info is required.
 		public_host (str, optional): The public host or domain of the server if it differs from the url. Defaults to None.
 		verify_ssl (bool, optional): Whether to verify the SSL Certificate. Defaults to True.
+		timeout (float or tuple, optional): How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
 	Returns:
 		dict: The /rest/info data from the server as a JSON dictionnary.
@@ -90,13 +92,13 @@ def getServerInfo(endpoint_type: str, url: str, public_host: str = None, verify_
 		headers['Host'] = public_host
 
 	# Retrieve the info
-	info_resp = requests.get(info_url, params={'f': 'json'}, timeout=4, verify=verify_ssl, headers=headers)
+	info_resp = requests.get(info_url, params={'f': 'json'}, timeout=timeout, verify=verify_ssl, headers=headers)
 	info = readEsriJson(info_resp, 'getting ArcGIS Server info')
 
 	return info
 
 
-def _generateToken(token_url: str, username: str, password: str, referer: str = None, verify_ssl: bool = True) -> dict:
+def _generateToken(token_url: str, username: str, password: str, referer: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict:
 	"""Send a request for a token to an ArcGIS Enterprise get token endpoint.
 
 	Args:
@@ -106,6 +108,7 @@ def _generateToken(token_url: str, username: str, password: str, referer: str = 
 		referer (str, optional): The referer used to generate the token.
 		                         If not specified, will generate a request IP token.
 		verify_ssl (bool, optional): Whether to verify the SSL certificates. Defaults to True.
+		timeout (float or tuple, optional): How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
 	Returns:
 		dict: The JSON dictionnary token return from the server.
@@ -122,14 +125,14 @@ def _generateToken(token_url: str, username: str, password: str, referer: str = 
 		'password': password,
 		'client': 'requestip' if referer is None else 'referer',
 		'referer': referer or '',
-	}, timeout=4, verify=verify_ssl)
+	}, timeout=timeout, verify=verify_ssl)
 
 	token_data = readEsriJson(response, 'getting a token')
 
 	return token_data
 
 
-def _swapPortalForServerToken(token_url: str, url: str, token: str, verify_ssl: bool = True) -> dict:
+def _swapPortalForServerToken(token_url: str, url: str, token: str, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict:
 	"""Send a request for a referer token to an ArcGIS Enterprise get token endpoint.
 
 	Args:
@@ -137,6 +140,7 @@ def _swapPortalForServerToken(token_url: str, url: str, token: str, verify_ssl: 
 		url (str): The URL of the request for which a token is required.
 		token (str): Portal token that is being upgraded.
 		verify_ssl (bool, optional): Whether to verify the SSL certificates. Defaults to True.
+		timeout (float or tuple, optional): How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
 	Returns:
 		dict: The JSON dictionnary token return from the server.
@@ -147,14 +151,14 @@ def _swapPortalForServerToken(token_url: str, url: str, token: str, verify_ssl: 
 		'expiration': 60,
 		'serverURL': url,
 		'token': token,
-	}, timeout=4, verify=verify_ssl)
+	}, timeout=timeout, verify=verify_ssl)
 
 	token_data = readEsriJson(response, 'swapping portal token for server token')
 
 	return token_data
 
 
-def getToken(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True) -> dict:
+def getToken(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict:
 	"""Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
 
 	Args:
@@ -164,6 +168,7 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 		password (str): The password corresponding to the provided username.
 		public_host (str, optional): The public host or domain of the server if it differs from the url. Defaults to None.
 		verify_ssl (bool, optional): Whether to verify the SSL certificate. Defaults to True.
+		timeout (float or tuple, optional): How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
 	Raises:
 		NotImplementedError: Authentications other than token based are not implemented.
@@ -179,7 +184,7 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 		if token_data is None:
 
 			# Get the server information & validate it's data
-			info = getServerInfo(endpoint_type, url, public_host, verify_ssl)
+			info = getServerInfo(endpoint_type, url, public_host, verify_ssl, timeout)
 
 			if not info['authInfo']['isTokenBasedSecurity']:
 				raise NotImplementedError('ArcGISREST does not support non token based securities.')
@@ -193,12 +198,12 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 			token_data = _getStoredToken(token_url)
 
 			if token_data is None:
-				token_data = _generateToken(token_url, username, password, deriveRefererUrl(url), verify_ssl)
+				token_data = _generateToken(token_url, username, password, deriveRefererUrl(url), verify_ssl, timeout)
 				_setStoredToken(token_url, token_data)
 
 			# If federated server, swap Portal token for server token
 			if endpoint_type == 'arcgis' and 'owningSystemUrl' in info:
-				token_data = _swapPortalForServerToken(token_url, url, token_data['token'], verify_ssl)
+				token_data = _swapPortalForServerToken(token_url, url, token_data['token'], verify_ssl, timeout)
 				_setStoredToken(url, token_data)
 
 	# GeoEvent requires that we go up to it's associated ArcGIS Server instance

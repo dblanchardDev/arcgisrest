@@ -144,7 +144,7 @@ class Connection():
 		# Send the request (and parse for errors)
 		req = self._session or requests
 
-		response = req.request(method, url, params=params, data=data, json=json, files=files, headers=headers, timeout=4, verify=self.arcgisrest.verify_ssl)
+		response = req.request(method, url, params=params, data=data, json=json, files=files, headers=headers, timeout=self.arcgisrest.timeout, verify=self.arcgisrest.verify_ssl)
 
 		readEsriJson(response, 'executing a {} request'.format(method.lower()))
 

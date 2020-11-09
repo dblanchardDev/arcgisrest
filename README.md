@@ -42,7 +42,7 @@ wa_resp = server.portal.get('system/webadaptors', admin=True)
 Each instance of the *ArcgisRest* class is used to send requests to all software components (Portal, ArcGIS Server, and GeoEvent) on the same server. If the components are on multiple servers, multiple instances of the *ArcgisRest* class will be required.
 
 
-<code>arcgisrest.<b>ArcgisRest</b>(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True)</code>
+<code>arcgisrest.<b>ArcgisRest</b>(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05)</code>
 
 The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies) or connecting directly to the server.
 
@@ -55,6 +55,8 @@ However, both scenarios share the following parameters:
  * **password** (optional) – The password for the provided username. Will use an anonymous connection if not specified.
 
  * **verify_ssl** (optional) – Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections. Defaults to True.
+
+ * **timeout** (optional) – How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
 &nbsp;
 ## Connections via Web Adaptors (or Reverse Proxies)
@@ -113,6 +115,8 @@ If multiple components of ArcGIS Enterprise are installed on the same server, yo
  * <code>ArcgisRest.<b>public_host</b>:str</code> (readonly) – The public host for the server to be used for authentication.
 
  * <code>ArcgisRest.<b>web_adaptors</b>:dict</code> (readonly) – The name of the web adaptors used on this server.
+
+ * <code>ArcgisRest.<b>timeout</b>:Union[float, tuple]</code> (readonly) – How many seconds to wait for the server to send data before giving up. If a tuple then (connect timeout, read timeout), if None then wait forever.
 
 
 &nbsp;
@@ -197,7 +201,7 @@ A few methods related to tokens are exposed for convenience.
 
 📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
 
-<code>arcgisrest.tokens.<b>getServerInfo</b>(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
+<code>arcgisrest.tokens.<b>getServerInfo</b>(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
 
  * Parameters:
    * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis'].
@@ -208,12 +212,14 @@ A few methods related to tokens are exposed for convenience.
 
    * **verify_ssl** – Same as ArcgisRest for details.
 
+   * **timeout** (optional) – How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
+
  * Returns:
 
    * The /rest/info data from the server as a JSON dictionnary.
 
 
-<code>arcgisrest.tokens.<b>getToken</b>(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
+<code>arcgisrest.tokens.<b>getToken</b>(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
 
  * Parameters:
    * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis', 'geoevent'].
@@ -227,6 +233,8 @@ A few methods related to tokens are exposed for convenience.
    * **public_host** – The public host or domain of the server if it differs from the url. Defaults to None.
 
    * **verify_ssl** – Whether to verify the SSL certificate. Defaults to True.
+
+   * **timeout** (optional) – How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
  * Raises:
    * **NotImplementedError** – Authentications other than token based are not implemented.
