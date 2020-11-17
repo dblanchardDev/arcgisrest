@@ -13,9 +13,9 @@ Underneath the hood, this module makes use of the [Requests package](https://req
 
 This helper was written with Python 3.8 but should work with most if not all 3.x versions of Python.
 
-You will first need to install the [Requests package](https://requests.readthedocs.io/en/master/user/install/#install) in your Python environment. You will then need to drop the *arcgis* folder in your project.
+You will first need to install the [Requests package](https://requests.readthedocs.io/en/master/user/install/#install) in your Python environment. You will then need to copy the *arcgis* folder from this repository into your project.
 
-Next, import the module and make your first request as follows:
+You would then import the module and make your first request as follows:
 
 ```python
 import arcgisrest
@@ -42,7 +42,7 @@ wa_resp = server.portal.get('system/webadaptors', admin=True)
 Each instance of the *ArcgisRest* class is used to send requests to all software components (Portal, ArcGIS Server, and GeoEvent) on the same server. If the components are on multiple servers, multiple instances of the *ArcgisRest* class will be required.
 
 
-<code>arcgisrest.<b>ArcgisRest</b>(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05)</code>
+<code>arcgisrest.<b>ArcgisRest</b>(<b>server</b>: str, <b>username</b>: str = None, <b>password</b>: str = None, <b>web_adaptors</b>: dict = None, <b>public_host</b>: str = None, <b>verify_ssl</b>: bool = True, <b>timeout</b>: Union[float, tuple] = 3.05)</code>
 
 The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies) or connecting directly to the server.
 
@@ -92,7 +92,7 @@ server = arcgisrest.ArcgisRest('https://server.domain', 'user_name', 'P@ssw0rd',
 
 From the instance of *ArcgisRest*, you can access several properties, along with the connection handlers for each ArcGIS Enterprise component (Portal, ArcGIS Server, and GeoEvent Server).
 
-If multiple components of ArcGIS Enterprise are installed on the same server, you may re-use the same instance of *ArcgisRest*.
+If multiple components of ArcGIS Enterprise are accessible on/from the same server, you may re-use the same instance of *ArcgisRest*.
 
 📝 *No actual connection is made to the server until the first request is sent.*
 
@@ -114,7 +114,7 @@ If multiple components of ArcGIS Enterprise are installed on the same server, yo
 
  * <code>ArcgisRest.<b>public_host</b>:str</code> (readonly) – The public host for the server to be used for authentication.
 
- * <code>ArcgisRest.<b>web_adaptors</b>:dict</code> (readonly) – The name of the web adaptors used on this server.
+ * <code>ArcgisRest.<b>web_adaptors</b>:dict</code> (readonly) – The name of the web adaptors used on this server as a dictionary (`{'portal': str, 'arcgis': str}`).
 
  * <code>ArcgisRest.<b>timeout</b>:Union[float, tuple]</code> (readonly) – How many seconds to wait for the server to send data before giving up. If a tuple then (connect timeout, read timeout), if None then wait forever.
 
@@ -126,21 +126,21 @@ Used to send requests to the corresponding software component on the server. URL
 
 This class is not created directly but instead accessed via the `.portal`, `.arcgis`, and `.geoevent` properties of the *ArcgisRest* class.
 
- * <code>Connection.<b>get</b>(path: str, params: dict = None, admin: bool = False) -> requests.Response</code> – Send a GET request to the corresponding server component.
+ * <code>Connection.<b>get</b>(<b>path</b>: str, <b>params</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a GET request to the corresponding server component.
 
- * <code>Connection.<b>post</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a POST request to the corresponding server component.
+ * <code>Connection.<b>post</b>(<b>path</b>: str, <b>data</b>: dict = None, <b>json</b>: dict = None, <b>files</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a POST request to the corresponding server component.
 
- * <code>Connection.<b>put</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a PUT request to the corresponding server component.
+ * <code>Connection.<b>put</b>(<b>path</b>: str, <b>data</b>: dict = None, <b>json</b>: dict = None, <b>files</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a PUT request to the corresponding server component.
 
- * <code>Connection.<b>patch</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a PATCH request to the corresponding server component.
+ * <code>Connection.<b>patch</b>(<b>path</b>: str, <b>data</b>: dict = None, <b>json</b>: dict = None, <b>files</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a PATCH request to the corresponding server component.
 
- * <code>Connection.<b>delete</b>(path: str, admin: bool = False) -> requests.Response</code> – Send a DELETE request to the corresponding server component.
+ * <code>Connection.<b>delete</b>(<b>path</b>: str, <b>admin</b>: bool = False) -> requests.Response</code> – Send a DELETE request to the corresponding server component.
 
- * <code>Connection.<b>head</b>(path: str, admin: bool = False) -> requests.Response</code> – Send a HEAD request to the corresponding server component.
+ * <code>Connection.<b>head</b>(<b>path</b>: str, <b>admin</b>: bool = False) -> requests.Response</code> – Send a HEAD request to the corresponding server component.
 
  * <code>Connection.<b>arcgisrest</b>:ArcgisRest</code> (readonly) – A pointer back to the source ArcgisRest instance.
 
- * <code>Connection.<b>endpoint_type</b>:str</code> (readonly) – The endpoint type for this connection handler: 'portal', 'arcgis', 'geoevent'.
+ * <code>Connection.<b>endpoint_type</b>:str</code> (readonly) – The endpoint type for this connection handler ('portal', 'arcgis', or 'geoevent').
 
 ## Parameters
 
@@ -172,13 +172,13 @@ See the [Requests package documentation](https://requests.readthedocs.io/en/mast
 
 ## Exceptions
 
- * **arcgisrest.utils.ArcgisRestException** – Not raised directly, serves as the parent for the *HTTPError* and the *ArcGISError* exceptions. Beyond those provided by the core Python exception, provides:
+ * **arcgisrest.utils.ArcgisRestException** – Not raised directly, serves as the parent for the *HTTPError* and the *ArcGISError* exceptions. Has the following properties (beyond those provided by the core Python exception):
     * _**message**_ – Explanation of the error.
     * _**response**_ – A copy of the original *requests.Response* object from which the exception originated.
 
- * **arcgisrest.utils.HTTPError** – A non successful status code was returned. Inherits from *ArcgisRestException*.
+ * **arcgisrest.utils.HTTPError** – A non successful status code was returned (400+). Inherits from *ArcgisRestException*.
 
- * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported an error within its response body. Inherits from *ArcgisRestException*.
+ * **arcgisrest.utils.ArcGISError** – The request status was successful (200 to 299) but ArcGIS Enterprise reported an error in the response body. Inherits from *ArcgisRestException*.
 
  * **NotImplementedError** – Sending a GeoEvent request via Web Adaptor isn't supported.
 
@@ -201,25 +201,25 @@ A few methods related to tokens are exposed for convenience.
 
 📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
 
-<code>arcgisrest.tokens.<b>getServerInfo</b>(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
+<code>arcgisrest.tokens.<b>getServerInfo</b>(<b>endpoint_type</b>: str, <b>url</b>: str, <b>public_host</b>: str = None, <b>verify_ssl</b>: bool = True, <b>timeout</b>: Union[float, tuple] = 3.05) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
 
  * Parameters:
    * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis'].
 
    * **url** – The full URL for which the info is required.
 
-   * **public_host** – Same as ArcgisRest for details.
+   * **public_host** – Same as ArcgisRest.
 
-   * **verify_ssl** – Same as ArcgisRest for details.
+   * **verify_ssl** – Same as ArcgisRest.
 
    * **timeout** (optional) – How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
  * Returns:
 
-   * The /rest/info data from the server as a JSON dictionnary.
+   * The _/rest/info_ JSON data from the server as a dictionnary.
 
 
-<code>arcgisrest.tokens.<b>getToken</b>(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
+<code>arcgisrest.tokens.<b>getToken</b>(<b>endpoint_type</b>: str, <b>url</b>: str, <b>username</b>: str, <b>password</b>: str, <b>public_host</b>: str = None, <b>verify_ssl</b>: bool = True, <b>timeout</b>: Union[float, tuple] = 3.05) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
 
  * Parameters:
    * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis', 'geoevent'].
@@ -239,7 +239,7 @@ A few methods related to tokens are exposed for convenience.
  * Raises:
    * **NotImplementedError** – Authentications other than token based are not implemented.
 
- * Returns: The token data dictionary {token: str, expires: int, ssl: bool}.
+ * Returns: The token data dictionary (`{token: str, expires: int, ssl: bool}`).
 
 &nbsp;
 # Utilities
@@ -247,7 +247,7 @@ A few utilities are available from the *utils* sub-package.
 
 📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
 
-<code>arcgisrest.utils.<b>deriveBaseUrl</b>(url: str) -> str</code> – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
+<code>arcgisrest.utils.<b>deriveBaseUrl</b>(<b>url</b>: str) -> str</code> – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
 
  * Parameters:
    * **url** – The full URL from which to derive the base URL.
@@ -259,7 +259,7 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-<code>arcgisrest.utils.<b>deriveRefererUrl</b>(url: str) -> str</code> – Derive the referrer URL for tokens.
+<code>arcgisrest.utils.<b>deriveRefererUrl</b>(<b>url</b>: str) -> str</code> – Derive the referrer URL for tokens.
 
  * Parameters:
    * **url** – The full URL from which to derive the referrer URL.
@@ -271,7 +271,7 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-<code>arcgisrest.utils.<b>readEsriJson</b>(response: requests.Response, action: str) -> dict</code> – Read the JSON from a request to an Esri server, raising an error for HTTP errors and ArcGIS errors.
+<code>arcgisrest.utils.<b>readEsriJson</b>(<b>response</b>: requests.Response, <b>action</b>: str) -> dict</code> – Read the JSON returned by a request to an Esri server, raising an exception for HTTP errors and ArcGIS errors (within the body of the response).
 
  * Parameters:
    * **response** – The response object to parse.
@@ -279,13 +279,13 @@ A few utilities are available from the *utils* sub-package.
 
  * Exception:
    * **requests.exceptions.HTTPError** – An non-successful value is received from the HTTP server.
-   * **arcgisrest.utils.ArcGISError** – ArcGIS Enterprise reported that the request was not successful.
+   * **arcgisrest.utils.ArcGISError** – The request status was successful (200 to 299) but ArcGIS Enterprise reported an error in the response body.
 
  * Returns: The JSON dictionary from the response.
 
 &nbsp;
 
-<code>arcgisrest.utils.<b>logDebug</b>()</code> – Activate output of debug messages to logging for the requests and urllib3 packages.
+<code>arcgisrest.utils.<b>logDebug</b>()</code> – Activate the logging of debug messages for the requests and urllib3 packages.
 
 ---
 
@@ -296,7 +296,7 @@ Found a bug? Please let me know by submitting an issue.
 Contributions are welcomed on this open source project. Please see our [guidelines in the repository](https://github.com/dblanchardDev/arcgisrest/blob/master/Contributing.md) before contributing.
 
 ## Licensing
-Copyright 2017 David Blanchard – All Rights Reserved
+Copyright 2020 Esri Canada – All Rights Reserved
 
 Licensed under the MIT License (the "License"); you may not use these files except in compliance with the License. You may obtain a copy of the License at:
 
