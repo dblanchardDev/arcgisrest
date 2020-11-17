@@ -42,7 +42,7 @@ wa_resp = server.portal.get('system/webadaptors', admin=True)
 Each instance of the *ArcgisRest* class is used to send requests to all software components (Portal, ArcGIS Server, and GeoEvent) on the same server. If the components are on multiple servers, multiple instances of the *ArcgisRest* class will be required.
 
 
-<code>arcgisrest.<b>ArcgisRest</b>(server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05)</code>
+<code>arcgisrest.<b>ArcgisRest</b>(<b>server</b>: str, <b>username</b>: str = None, <b>password</b>: str = None, <b>web_adaptors</b>: dict = None, <b>public_host</b>: str = None, <b>verify_ssl</b>: bool = True, <b>timeout</b>: Union[float, tuple] = 3.05)</code>
 
 The choice of parameters used at initialization varies depending on whether you will be connecting through Web Adaptors (or reverse proxies) or connecting directly to the server.
 
@@ -126,17 +126,17 @@ Used to send requests to the corresponding software component on the server. URL
 
 This class is not created directly but instead accessed via the `.portal`, `.arcgis`, and `.geoevent` properties of the *ArcgisRest* class.
 
- * <code>Connection.<b>get</b>(path: str, params: dict = None, admin: bool = False) -> requests.Response</code> – Send a GET request to the corresponding server component.
+ * <code>Connection.<b>get</b>(<b>path</b>: str, <b>params</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a GET request to the corresponding server component.
 
- * <code>Connection.<b>post</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a POST request to the corresponding server component.
+ * <code>Connection.<b>post</b>(<b>path</b>: str, <b>data</b>: dict = None, <b>json</b>: dict = None, <b>files</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a POST request to the corresponding server component.
 
- * <code>Connection.<b>put</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a PUT request to the corresponding server component.
+ * <code>Connection.<b>put</b>(<b>path</b>: str, <b>data</b>: dict = None, <b>json</b>: dict = None, <b>files</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a PUT request to the corresponding server component.
 
- * <code>Connection.<b>patch</b>(path: str, data: dict = None, json: dict = None, files: dict = None, admin: bool = False) -> requests.Response</code> – Send a PATCH request to the corresponding server component.
+ * <code>Connection.<b>patch</b>(<b>path</b>: str, <b>data</b>: dict = None, <b>json</b>: dict = None, <b>files</b>: dict = None, <b>admin</b>: bool = False) -> requests.Response</code> – Send a PATCH request to the corresponding server component.
 
- * <code>Connection.<b>delete</b>(path: str, admin: bool = False) -> requests.Response</code> – Send a DELETE request to the corresponding server component.
+ * <code>Connection.<b>delete</b>(<b>path</b>: str, <b>admin</b>: bool = False) -> requests.Response</code> – Send a DELETE request to the corresponding server component.
 
- * <code>Connection.<b>head</b>(path: str, admin: bool = False) -> requests.Response</code> – Send a HEAD request to the corresponding server component.
+ * <code>Connection.<b>head</b>(<b>path</b>: str, <b>admin</b>: bool = False) -> requests.Response</code> – Send a HEAD request to the corresponding server component.
 
  * <code>Connection.<b>arcgisrest</b>:ArcgisRest</code> (readonly) – A pointer back to the source ArcgisRest instance.
 
@@ -201,7 +201,7 @@ A few methods related to tokens are exposed for convenience.
 
 📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
 
-<code>arcgisrest.tokens.<b>getServerInfo</b>(endpoint_type: str, url: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
+<code>arcgisrest.tokens.<b>getServerInfo</b>(<b>endpoint_type</b>: str, <b>url</b>: str, <b>public_host</b>: str = None, <b>verify_ssl</b>: bool = True, <b>timeout</b>: Union[float, tuple] = 3.05) -> dict</code> – Get the server's info endpoint (not available for GeoEvent Server).
 
  * Parameters:
    * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis'].
@@ -219,7 +219,7 @@ A few methods related to tokens are exposed for convenience.
    * The _/rest/info_ JSON data from the server as a dictionnary.
 
 
-<code>arcgisrest.tokens.<b>getToken</b>(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
+<code>arcgisrest.tokens.<b>getToken</b>(<b>endpoint_type</b>: str, <b>url</b>: str, <b>username</b>: str, <b>password</b>: str, <b>public_host</b>: str = None, <b>verify_ssl</b>: bool = True, <b>timeout</b>: Union[float, tuple] = 3.05) -> dict</code> – Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
 
  * Parameters:
    * **endpoint_type** – The endpoint type as chosen from ['portal', 'arcgis', 'geoevent'].
@@ -247,7 +247,7 @@ A few utilities are available from the *utils* sub-package.
 
 📝 *You should not normally need to call these methods as their operations are already handled for you when making a request.*
 
-<code>arcgisrest.utils.<b>deriveBaseUrl</b>(url: str) -> str</code> – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
+<code>arcgisrest.utils.<b>deriveBaseUrl</b>(<b>url</b>: str) -> str</code> – Derive the base URL to an ArcGIS Server endpoint from a more complex URL.
 
  * Parameters:
    * **url** – The full URL from which to derive the base URL.
@@ -259,7 +259,7 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-<code>arcgisrest.utils.<b>deriveRefererUrl</b>(url: str) -> str</code> – Derive the referrer URL for tokens.
+<code>arcgisrest.utils.<b>deriveRefererUrl</b>(<b>url</b>: str) -> str</code> – Derive the referrer URL for tokens.
 
  * Parameters:
    * **url** – The full URL from which to derive the referrer URL.
@@ -271,7 +271,7 @@ A few utilities are available from the *utils* sub-package.
 
 &nbsp;
 
-<code>arcgisrest.utils.<b>readEsriJson</b>(response: requests.Response, action: str) -> dict</code> – Read the JSON returned by a request to an Esri server, raising an exception for HTTP errors and ArcGIS errors (within the body of the response).
+<code>arcgisrest.utils.<b>readEsriJson</b>(<b>response</b>: requests.Response, <b>action</b>: str) -> dict</code> – Read the JSON returned by a request to an Esri server, raising an exception for HTTP errors and ArcGIS errors (within the body of the response).
 
  * Parameters:
    * **response** – The response object to parse.
