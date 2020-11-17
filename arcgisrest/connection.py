@@ -129,7 +129,7 @@ class Connection():
 			# Obtain a token
 			token = None
 			if self.arcgisrest.username and self.arcgisrest.password:
-				token_data = getToken(self.endpoint_type, url, self.arcgisrest.username, self.arcgisrest.password, self.arcgisrest.public_host, self.arcgisrest.verify_ssl)
+				token_data = getToken(self.endpoint_type, url, self.arcgisrest.username, self.arcgisrest.password, self.arcgisrest.public_host, self.arcgisrest.verify_ssl, self.arcgisrest.timeout)
 				token = token_data['token']
 
 			# Generate the requires params and headers

@@ -215,7 +215,7 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 		arcgis_url = '{}://{}:{}/arcgis'.format(us.scheme, us.hostname, port)
 
 		# Get token for ArcGIS Server
-		token_data = getToken('arcgis', arcgis_url, username, password, public_host, verify_ssl)
+		token_data = getToken('arcgis', arcgis_url, username, password, public_host, verify_ssl, timeout)
 		_setStoredToken(url, token_data)
 
 	# Un-recognized endpoint
