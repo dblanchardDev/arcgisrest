@@ -58,6 +58,8 @@ However, both scenarios share the following parameters:
 
  * **timeout** (optional) – How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
 
+ * **swapToken** (optional) – Whether to swap the portal token for an ArcGIS Server token on federated sites. Is only required in rare circumstances and will only work when using a web-adaptor connection. Defaults to false.
+
 &nbsp;
 ## Connections via Web Adaptors (or Reverse Proxies)
 A connection via Web Adaptors (or Reverse Proxies) is one where the connection to all ArcGIS Enterprise components is established through the same common web server.
@@ -66,7 +68,7 @@ A connection via Web Adaptors (or Reverse Proxies) is one where the connection t
 
 📝 *Connection to the GeoEvent endpoints are not supported in this mode.*
 
- * **web_adaptors** (optional) – A dictionary of the Web Adaptor (or reverse proxy) directory names in the format `{'portal': str, 'arcgis': str}`. Only specify the directories that are installed. If not specified, a direct connection will be used.
+* **web_adaptors** (optional) – A dictionary of the Web Adaptor (or reverse proxy) directory names in the format `{'portal': str, 'arcgis': str}`. Only specify the directories that are installed. If not specified, a direct connection will be used.
 
 ```python
 import arcgisrest

@@ -36,6 +36,7 @@ class ArcgisRest():
 	_public_host: str = None
 	_web_adaptors: str = None
 	_timeout: Union[float, tuple] = None
+	_swapToken: bool = False
 
 	_WEB_ADAPTORS_TEMPLATE: dict = {
 		'portal': None,
@@ -51,7 +52,7 @@ class ArcgisRest():
 
 
 	# Intialization
-	def __init__(self, server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05):
+	def __init__(self, server: str, username: str = None, password: str = None, web_adaptors: dict = None, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05, swapToken: bool = False):
 		"""Handle connections and requests to various ArcGIS Enterprise endpoints.
 
 		Args:
@@ -62,6 +63,8 @@ class ArcgisRest():
 			public_host (str, optional): The public host used by the servers (e.g. `example.com`). This is normally the host/domain via which the main Web Adaptors (or reverse proxies) are accesible and the same as the value used for the *WebContextURL* properties. Used for direct connections. Default to None.
 			verify_ssl (bool, optional): Whether to verify the SSL certificates and prevent credentials from being sent over un-encrypted connections. Defaults to True.
 			timeout (float or tuple, optional): How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
+			swapToken (bool, optional): Whether portal tokens will be swapped for ArcGIS Server tokens before use
+				on federated servers. Defaults to false as normally the portal token can be used.
 		"""
 
 		# Store properties
@@ -74,6 +77,7 @@ class ArcgisRest():
 		self._verify_ssl = verify_ssl
 		self._public_host = public_host
 		self._timeout = timeout
+		self._swapToken = swapToken
 
 		self._web_adaptors = self._WEB_ADAPTORS_TEMPLATE.copy()
 		if web_adaptors is not None:
@@ -135,6 +139,12 @@ class ArcgisRest():
 	def timeout(self) -> Union[float, tuple]:
 		"""How many seconds to wait for the server to send data before giving up. If a tuple then (connect timeout, read timeout), if None then wait forever."""
 		return self._timeout
+	
+
+	@property
+	def swapToken(self) -> bool:
+		"""Whether portal tokens will be swapped for ArcGIS Server tokens before use on federated servers."""
+		return self._swapToken
 
 
 	@property

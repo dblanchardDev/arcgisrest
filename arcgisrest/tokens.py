@@ -158,7 +158,7 @@ def _swapPortalForServerToken(token_url: str, url: str, token: str, verify_ssl: 
 	return token_data
 
 
-def getToken(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05) -> dict:
+def getToken(endpoint_type: str, url: str, username: str, password: str, public_host: str = None, verify_ssl: bool = True, timeout: Union[float, tuple] = 3.05, swapToken: bool = False) -> dict:
 	"""Get an ArcGIS token for a URL. Will re-use previous tokens if they have 10 or more minutes until expiration.
 
 	Args:
@@ -169,6 +169,8 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 		public_host (str, optional): The public host or domain of the server if it differs from the url. Defaults to None.
 		verify_ssl (bool, optional): Whether to verify the SSL certificate. Defaults to True.
 		timeout (float or tuple, optional): How many seconds to wait for the server to send data before giving up, as a float, or a (connect timeout, read timeout) tuple. To wait forever, pass a None value. Defaults to 3.05 seconds.
+		swapToken (bool, optional): Whether portal tokens will be swapped for ArcGIS Server tokens before use
+				on federated servers. Defaults to false as normally the portal token can be used.
 
 	Raises:
 		NotImplementedError: Authentications other than token based are not implemented.
@@ -201,9 +203,11 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 				token_data = _generateToken(token_url, username, password, deriveRefererUrl(url), verify_ssl, timeout)
 				_setStoredToken(token_url, token_data)
 
-			# If federated server, swap Portal token for server token
-			if endpoint_type == 'arcgis' and 'owningSystemUrl' in info:
+			# If federated server, swap Portal token for server token if requested
+			if swapToken and endpoint_type == 'arcgis' and 'owningSystemUrl' in info:
 				token_data = _swapPortalForServerToken(token_url, url, token_data['token'], verify_ssl, timeout)
+				_setStoredToken(url, token_data)
+			else:
 				_setStoredToken(url, token_data)
 
 	# GeoEvent requires that we go up to it's associated ArcGIS Server instance
@@ -215,7 +219,7 @@ def getToken(endpoint_type: str, url: str, username: str, password: str, public_
 		arcgis_url = '{}://{}:{}/arcgis'.format(us.scheme, us.hostname, port)
 
 		# Get token for ArcGIS Server
-		token_data = getToken('arcgis', arcgis_url, username, password, public_host, verify_ssl, timeout)
+		token_data = getToken('arcgis', arcgis_url, username, password, public_host, verify_ssl, timeout, swapToken)
 		_setStoredToken(url, token_data)
 
 	# Un-recognized endpoint
