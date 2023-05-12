@@ -8,6 +8,8 @@ Underneath the hood, this module makes use of the [Requests package](https://req
 
 📝 *This helper is meant for onsite deployments of ArcGIS Enterprise and is not compatible with ArcGIS Online.*
 
+✅ *Consider using the Esri supported [ArcGIS API for Python](https://developers.arcgis.com/python/) instead if it is suitable for your needs.*
+
 &nbsp;
 # Getting Started
 
