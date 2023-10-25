@@ -127,10 +127,9 @@ class Connection():
 
 		if method not in ['HEAD', 'OPTIONS']:
 			# Obtain a token
-			token = None
+			token_data = None
 			if self.arcgisrest.username and self.arcgisrest.password:
 				token_data = getToken(self.endpoint_type, url, self.arcgisrest.username, self.arcgisrest.password, self.arcgisrest.public_host, self.arcgisrest.verify_ssl, self.arcgisrest.timeout, self.arcgisrest.swapToken)
-				token = token_data['token']
 
 			# Generate the requires params and headers
 			if method == 'GET' and params is None:
@@ -138,8 +137,8 @@ class Connection():
 			elif method in ['POST', 'PUT', 'PATCH'] and data is None and json is None:
 				data = {}
 
-			params, data, json = self._mixinBodies([params, data, json], token)
-			headers = self._getHeaders(token)
+			params, data, json = self._mixinBodies([params, data, json], token_data['token'])
+			headers = self._getHeaders(token_data)
 
 		# Send the request (and parse for errors)
 		req = self._session or requests
@@ -375,10 +374,10 @@ class Connection():
 		return bodies
 
 
-	def _getHeaders(self, token: str = None) -> dict:
+	def _getHeaders(self, token_data: dict = None) -> dict:
 		"""Create the base headers for the request, passing the accepted format (JSON) and token where required.
 
-		token (str, optional): The token used to login to the server. Defaults to None.
+		token_data (dict): The token data used to login to the server. Defaults to None.
 
 		Returns:
 			dict: A set of header names and values.
@@ -390,10 +389,13 @@ class Connection():
 		}
 
 		# Tokens
-		if token is not None:
+		if token_data is not None:
 			# GeoEvent
 			if self.endpoint_type == 'geoevent':
-				headers['Cookie'] = 'adminToken={}'.format(token)
+				headers['Cookie'] = 'adminToken={}'.format(token_data['token'])
+
+			if token_data.get("referer") is not None:
+				headers['Referer'] = token_data['referer']
 
 		return headers
 

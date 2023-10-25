@@ -128,6 +128,7 @@ def _generateToken(token_url: str, username: str, password: str, referer: str = 
 	}, timeout=timeout, verify=verify_ssl)
 
 	token_data = readEsriJson(response, 'getting a token')
+	token_data["referer"] = referer
 
 	return token_data
 
